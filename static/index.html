@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Osteoarthritis Severity Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .confidence {
+            color: #555;
+            font-size: 14px;
+        }
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Osteoarthritis Severity Detection</h1>
+    <p>Upload a knee X-ray image to assess osteoarthritis severity.</p>
+
+    <input type="file" id="fileInput" accept="image/*">
+    <br>
+    <button onclick="uploadImage()">Analyze X-ray</button>
+
+    <div class="result" id="result"></div>
+    <div class="confidence" id="confidence"></div>
+
+    <div class="disclaimer">
+        ⚠️ This tool is for research and educational purposes only.
+        It does not replace professional medical diagnosis.
+    </div>
+</div>
+
+<script>
+    async function uploadImage() {
+        const fileInput = document.getElementById("fileInput");
+        const resultDiv = document.getElementById("result");
+        const confidenceDiv = document.getElementById("confidence");
+
+        if (fileInput.files.length === 0) {
+            alert("Please select an X-ray image.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        resultDiv.innerHTML = "Analyzing...";
+        confidenceDiv.innerHTML = "";
+
+        const response = await fetch("/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        resultDiv.innerHTML = `<strong>Severity:</strong> ${data.severity}`;
+        confidenceDiv.innerHTML = `Confidence: ${data.confidence}`;
+    }
+</script>
+
+</body>
+</html>
