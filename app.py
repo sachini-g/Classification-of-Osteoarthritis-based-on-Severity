@@ -7,7 +7,6 @@ import numpy as np
 from PIL import Image
 import io
 
-# IMPORTANT: Use the SAME preprocessing as training
 from tensorflow.keras.applications.mobilenet_v3 import preprocess_input
 
 # --------------------------------------------------
